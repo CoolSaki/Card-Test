@@ -8,6 +8,16 @@ export const MainStyle = makeStyles((theme: Theme) =>
         flexDirection: "column",
       },
     },
+    header: {
+      background: "#fff",
+      fontFamily: "Montserrat",
+      color: "#000",
+      width: "100%",
+      fontWeight: 800,
+      fontSize: "50px",
+      textAlign: "center",
+      padding: "20px",
+    },
     playField: {
       position: "relative",
       padding: "100px",
@@ -19,6 +29,9 @@ export const MainStyle = makeStyles((theme: Theme) =>
       padding: "50px",
       [theme.breakpoints.down(1200)]: {
         display: "none",
+      },
+      "& :last-child": {
+        borderBottom: "none",
       },
     },
     dashboardDown: {

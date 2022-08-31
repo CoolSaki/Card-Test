@@ -1,17 +1,28 @@
 import { useStyles } from "./TableStyle";
 import avatar1 from "../../../../assets/image/avatar1.png";
+import avatar2 from "../../../../assets/image/avatar2.png";
+import avatar3 from "../../../../assets/image/avatar3.png";
+import avatar4 from "../../../../assets/image/avatar4.png";
 import { CARD, Card_back, Card_div_time } from "config/constant";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import clsx from "clsx";
 import RoundButton from "components/RoundButton";
 import winner from "../../../../assets/image/winner.png";
 
-export const Table = () => {
+interface TableProps {
+  result: (e: any) => void;
+}
+
+export const Table = ({ result }: TableProps) => {
   const classes = useStyles();
   const [firstC, setFirstC] = useState<any>();
   const [secondC, setSecondC] = useState<any>();
   const [thirdC, setThirdC] = useState<any>();
   const [fourthC, setFourthC] = useState<any>();
+  const [firstScore, setFirstScore] = useState(0);
+  const [secondScore, setSecondScore] = useState(0);
+  const [thirdScore, setThirdScore] = useState(0);
+  const [fourthScore, setFourthScore] = useState(0);
   const [complex, setComplex] = useState<boolean>();
   const [animationDiv, setAnimationDiv] = useState<number>();
   const [status, setStatus] = useState<boolean>();
@@ -29,6 +40,10 @@ export const Table = () => {
         setEndStatus(true);
       }
     }, Card_div_time);
+  };
+
+  const refresh = () => {
+    window.location.reload();
   };
 
   const startCard = async () => {
@@ -61,7 +76,38 @@ export const Table = () => {
         all.splice(Math.floor(Math.random() * all.length), 1)[0]
       );
     }
-
+    let Ttotal: number = 0;
+    let Ltotal: number = 0;
+    let Btotal: number = 0;
+    let Rtotal: number = 0;
+    first?.map((item: any) => {
+      if (item?.index < 17) {
+        Ttotal += 5 - Math.ceil(item?.index / 4);
+      }
+    });
+    second?.map((item: any) => {
+      if (item?.index < 17) {
+        Ltotal += 5 - Math.ceil(item?.index / 4);
+      }
+    });
+    third?.map((item: any) => {
+      if (item?.index < 17) {
+        Btotal += 5 - Math.ceil(item?.index / 4);
+      }
+    });
+    fourth?.map((item: any) => {
+      if (item?.index < 17) {
+        Rtotal += 5 - Math.ceil(item?.index / 4);
+      }
+    });
+    result({
+      a: Ttotal + Btotal,
+      b: Ltotal + Rtotal,
+    });
+    setFirstScore(Ttotal);
+    setSecondScore(Ltotal);
+    setThirdScore(Btotal);
+    setFourthScore(Rtotal);
     await setFirstC([...first].sort((a, b) => (a.index > b.index ? 1 : -1)));
     await setSecondC([...second].sort((a, b) => (a.index > b.index ? 1 : -1)));
     await setThirdC([...third].sort((a, b) => (a.index > b.index ? 1 : -1)));
@@ -76,13 +122,16 @@ export const Table = () => {
     <>
       <div className={classes.table}>
         <div className={classes.btnRoot}>
-          <RoundButton type="redo" action={startCard} />
+          <RoundButton type="redo" action={refresh} />
           <RoundButton action={startCard} className={classes.playBtn} />
         </div>
         {endStatus && (
           <>
-            <img src={winner} className={classes.winnerA} alt="winner" />
-            <img src={winner} className={classes.winnerB} alt="winner" />
+            {firstScore + thirdScore > secondScore + fourthScore ? (
+              <img src={winner} className={classes.winnerA} alt="winner" />
+            ) : (
+              <img src={winner} className={classes.winnerB} alt="winner" />
+            )}
           </>
         )}
         <div className={classes.avatar1Root}>
@@ -90,23 +139,23 @@ export const Table = () => {
           North
         </div>
         <div className={classes.avatar2Root}>
-          <img src={avatar1} className={classes.avatar} alt="avatar1" />
+          <img src={avatar2} className={classes.avatar} alt="avatar1" />
           East
         </div>
         <div className={classes.avatar3Root}>
-          <img src={avatar1} className={classes.avatar} alt="avatar1" />
+          <img src={avatar3} className={classes.avatar} alt="avatar1" />
           South
         </div>
         <div className={classes.avatar4Root}>
-          <img src={avatar1} className={classes.avatar} alt="avatar1" />
+          <img src={avatar4} className={classes.avatar} alt="avatar1" />
           West
         </div>
         {endStatus && (
           <>
-            <div className={classes.score1}>14</div>
-            <div className={classes.score2}>14</div>
-            <div className={classes.score3}>14</div>
-            <div className={classes.score4}>14</div>
+            <div className={classes.score1}>{firstScore}</div>
+            <div className={classes.score2}>{secondScore}</div>
+            <div className={classes.score3}>{thirdScore}</div>
+            <div className={classes.score4}>{fourthScore}</div>
           </>
         )}
         <>

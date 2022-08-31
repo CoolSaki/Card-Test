@@ -54,7 +54,7 @@ import card_back from "../assets/card/card_back.png";
 
 export const Card_back = card_back;
 
-export const Card_div_time = 200;
+export const Card_div_time = 100;
 
 export const CARD: any = [
   [

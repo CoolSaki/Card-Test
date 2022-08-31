@@ -1,13 +1,29 @@
+import { useState } from "react";
 import { Table } from "./components/Table/Table";
 import { MainStyle } from "./MainStyle";
 
 export const Main = () => {
   const classes = MainStyle();
+  const [AlltotalArray, setAlltotalArray] = useState<any>();
+  const [AScore, setAScore] = useState(0);
+  const [BScore, setBScore] = useState(0);
+  const getResult = (e: any) => {
+    let instance: any = [];
+    instance = instance.concat(AlltotalArray, {
+      a: e?.a,
+      b: e?.b,
+    });
+    setAScore(AScore + e?.a);
+    setBScore(BScore + e?.b);
+    setAlltotalArray(instance);
+  };
+
   return (
     <>
+      <div className={classes.header}>Card-Game</div>
       <div className={classes.root}>
         <div className={classes.playField}>
-          <Table />
+          <Table result={(e) => getResult(e)} />
         </div>
         <div className={classes.dashboard}>
           <span className={classes.resultHeader}>Result</span>
@@ -16,13 +32,19 @@ export const Main = () => {
             <span className={classes.divDot}>:</span>
             <div className={classes.item}>B</div>
           </div>
+          {AlltotalArray?.map((item: any, key: any) => {
+            return (
+              item !== undefined && (
+                <div key={key} className={classes.column}>
+                  <div className={classes.item}>{item?.a}</div>
+                  <div className={classes.item}>{item?.b}</div>
+                </div>
+              )
+            );
+          })}
           <div className={classes.column}>
-            <div className={classes.item}>13</div>
-            <div className={classes.item}>15</div>
-          </div>
-          <div className={classes.column}>
-            <div className={classes.item}>TOTAL : 100</div>
-            <div className={classes.item}>TOTAL : 200</div>
+            <div className={classes.item}>TOTAL : {AScore}</div>
+            <div className={classes.item}>TOTAL : {BScore}</div>
           </div>
         </div>
         <div className={classes.dashboardDown}>
@@ -32,30 +54,20 @@ export const Main = () => {
             <div className={classes.itemDiv}></div>
             <div className={classes.itemDown}>B</div>
           </div>
+
+          {AlltotalArray?.map((item: any, key: any) => {
+            return (
+              <div key={key} className={classes.dashboardDownBody}>
+                <div className={classes.itemDown}>{item?.a}</div>
+                <div className={classes.itemDiv}></div>
+                <div className={classes.itemDown}>{item?.b}</div>
+              </div>
+            );
+          })}
           <div className={classes.dashboardDownBody}>
-            <div className={classes.itemDown}>15</div>
+            <div className={classes.itemDown}>TOTAL : {AScore}</div>
             <div className={classes.itemDiv}></div>
-            <div className={classes.itemDown}>17</div>
-          </div>
-          <div className={classes.dashboardDownBody}>
-            <div className={classes.itemDown}>15</div>
-            <div className={classes.itemDiv}></div>
-            <div className={classes.itemDown}>17</div>
-          </div>
-          <div className={classes.dashboardDownBody}>
-            <div className={classes.itemDown}>15</div>
-            <div className={classes.itemDiv}></div>
-            <div className={classes.itemDown}>17</div>
-          </div>
-          <div className={classes.dashboardDownBody}>
-            <div className={classes.itemDown}>15</div>
-            <div className={classes.itemDiv}></div>
-            <div className={classes.itemDown}>17</div>
-          </div>
-          <div className={classes.dashboardDownBody}>
-            <div className={classes.itemDown}>TOTAL : 15</div>
-            <div className={classes.itemDiv}></div>
-            <div className={classes.itemDown}>TOTAL : 17</div>
+            <div className={classes.itemDown}>TOTAL : {BScore}</div>
           </div>
         </div>
       </div>
