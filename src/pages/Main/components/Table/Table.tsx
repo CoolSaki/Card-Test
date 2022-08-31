@@ -4,6 +4,7 @@ import { CARD, Card_back, Card_div_time } from "config/constant";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import RoundButton from "components/RoundButton";
+import winner from "../../../../assets/image/winner.png";
 
 export const Table = () => {
   const classes = useStyles();
@@ -70,7 +71,6 @@ export const Table = () => {
       diving();
     }, 3000);
   };
-  console.log(complex);
 
   return (
     <>
@@ -79,18 +79,36 @@ export const Table = () => {
           <RoundButton type="redo" action={startCard} />
           <RoundButton action={startCard} className={classes.playBtn} />
         </div>
+        {endStatus && (
+          <>
+            <img src={winner} className={classes.winnerA} alt="winner" />
+            <img src={winner} className={classes.winnerB} alt="winner" />
+          </>
+        )}
         <div className={classes.avatar1Root}>
           <img src={avatar1} className={classes.avatar} alt="avatar1" />
+          North
         </div>
         <div className={classes.avatar2Root}>
           <img src={avatar1} className={classes.avatar} alt="avatar1" />
+          East
         </div>
         <div className={classes.avatar3Root}>
           <img src={avatar1} className={classes.avatar} alt="avatar1" />
+          South
         </div>
         <div className={classes.avatar4Root}>
           <img src={avatar1} className={classes.avatar} alt="avatar1" />
+          West
         </div>
+        {endStatus && (
+          <>
+            <div className={classes.score1}>14</div>
+            <div className={classes.score2}>14</div>
+            <div className={classes.score3}>14</div>
+            <div className={classes.score4}>14</div>
+          </>
+        )}
         <>
           {complex && !status && !endStatus ? (
             <>
