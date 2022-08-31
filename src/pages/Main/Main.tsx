@@ -2,13 +2,18 @@ import { useState } from "react";
 import { Table } from "./components/Table/Table";
 import { MainStyle } from "./MainStyle";
 
+interface Score {
+  a: number;
+  b: number;
+}
+
 export const Main = () => {
   const classes = MainStyle();
   const [AlltotalArray, setAlltotalArray] = useState<any>();
   const [AScore, setAScore] = useState(0);
   const [BScore, setBScore] = useState(0);
-  const getResult = (e: any) => {
-    let instance: any = [];
+  const getResult = (e: Score) => {
+    let instance: Score[] = [];
     instance = instance.concat(AlltotalArray, {
       a: e?.a,
       b: e?.b,
@@ -32,7 +37,7 @@ export const Main = () => {
             <span className={classes.divDot}>:</span>
             <div className={classes.item}>B</div>
           </div>
-          {AlltotalArray?.map((item: any, key: any) => {
+          {AlltotalArray?.map((item: Score, key: number) => {
             return (
               item !== undefined && (
                 <div key={key} className={classes.column}>
@@ -55,7 +60,7 @@ export const Main = () => {
             <div className={classes.itemDown}>B</div>
           </div>
 
-          {AlltotalArray?.map((item: any, key: any) => {
+          {AlltotalArray?.map((item: Score, key: number) => {
             return (
               <div key={key} className={classes.dashboardDownBody}>
                 <div className={classes.itemDown}>{item?.a}</div>

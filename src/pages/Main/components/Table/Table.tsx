@@ -1,13 +1,14 @@
-import { useStyles } from "./TableStyle";
+import { useState } from "react";
+import clsx from "clsx";
+
+import RoundButton from "components/RoundButton";
 import avatar1 from "../../../../assets/image/avatar1.png";
 import avatar2 from "../../../../assets/image/avatar2.png";
 import avatar3 from "../../../../assets/image/avatar3.png";
 import avatar4 from "../../../../assets/image/avatar4.png";
-import { CARD, Card_back, Card_div_time } from "config/constant";
-import { useState } from "react";
-import clsx from "clsx";
-import RoundButton from "components/RoundButton";
 import winner from "../../../../assets/image/winner.png";
+import { useStyles } from "./TableStyle";
+import { Cards, Card_back, Card_div_time } from "config/constant";
 
 interface TableProps {
   result: (e: any) => void;
@@ -15,14 +16,21 @@ interface TableProps {
 
 export const Table = ({ result }: TableProps) => {
   const classes = useStyles();
-  const [firstC, setFirstC] = useState<any>();
-  const [secondC, setSecondC] = useState<any>();
-  const [thirdC, setThirdC] = useState<any>();
-  const [fourthC, setFourthC] = useState<any>();
-  const [firstScore, setFirstScore] = useState(0);
-  const [secondScore, setSecondScore] = useState(0);
-  const [thirdScore, setThirdScore] = useState(0);
-  const [fourthScore, setFourthScore] = useState(0);
+
+  const [cards, setCards] = useState({
+    first: [] as Card[],
+    second: [] as Card[],
+    third: [] as Card[],
+    fourth: [] as Card[],
+  });
+
+  const [score, setScore] = useState({
+    first: 0,
+    second: 0,
+    third: 0,
+    fourth: 0,
+  });
+
   const [complex, setComplex] = useState<boolean>();
   const [animationDiv, setAnimationDiv] = useState<number>();
   const [status, setStatus] = useState<boolean>();
@@ -30,8 +38,8 @@ export const Table = ({ result }: TableProps) => {
 
   const diving = async () => {
     let index: number = 0;
-    await setStatus(true);
-    await setInterval(() => {
+    setStatus(true);
+    setInterval(() => {
       index++;
       if (index < 12) {
         setAnimationDiv(index % 4);
@@ -46,76 +54,74 @@ export const Table = ({ result }: TableProps) => {
     window.location.reload();
   };
 
+  const calcScore = (cards: Card[]) => {
+    let sum = 0;
+    cards.map((card: Card) => (sum += card.point));
+
+    return sum;
+  };
+
+  const cardSort = (cards: Card[]) => {
+    return cards.sort((a, b) => (a.id > b.id ? 1 : -1));
+  };
+
   const startCard = async () => {
     setComplex(false);
     setStatus(false);
     setEndStatus(false);
     setAnimationDiv(0);
-    const first: any = [];
-    const second: any = [];
-    const third: any = [];
-    const fourth: any = [];
-    const all: any = [];
-    await setComplex(true);
-    await CARD.map((item: any) => {
-      item.map((index: any) => {
-        all.push(index);
-      });
-    });
+
+    const _firstCards: Card[] = [];
+    const _secondCards: Card[] = [];
+    const _thirdCards: Card[] = [];
+    const _fourthCards: Card[] = [];
+    setComplex(true);
+
+    let _Cards: Card[] = [];
+    _Cards = _Cards.concat(Cards);
+
     for (let i = 0; i < 13; i++) {
-      await first.push(
-        all.splice(Math.floor(Math.random() * all.length), 1)[0]
+      _firstCards.push(
+        _Cards.splice(Math.floor(Math.random() * _Cards.length), 1)[0]
       );
-      await second.push(
-        all.splice(Math.floor(Math.random() * all.length), 1)[0]
+      _secondCards.push(
+        _Cards.splice(Math.floor(Math.random() * _Cards.length), 1)[0]
       );
-      await third.push(
-        all.splice(Math.floor(Math.random() * all.length), 1)[0]
+      _thirdCards.push(
+        _Cards.splice(Math.floor(Math.random() * _Cards.length), 1)[0]
       );
-      await fourth.push(
-        all.splice(Math.floor(Math.random() * all.length), 1)[0]
+      _fourthCards.push(
+        _Cards.splice(Math.floor(Math.random() * _Cards.length), 1)[0]
       );
     }
-    let Ttotal: number = 0;
-    let Ltotal: number = 0;
-    let Btotal: number = 0;
-    let Rtotal: number = 0;
-    first?.map((item: any) => {
-      if (item?.index < 17) {
-        Ttotal += 5 - Math.ceil(item?.index / 4);
-      }
-    });
-    second?.map((item: any) => {
-      if (item?.index < 17) {
-        Ltotal += 5 - Math.ceil(item?.index / 4);
-      }
-    });
-    third?.map((item: any) => {
-      if (item?.index < 17) {
-        Btotal += 5 - Math.ceil(item?.index / 4);
-      }
-    });
-    fourth?.map((item: any) => {
-      if (item?.index < 17) {
-        Rtotal += 5 - Math.ceil(item?.index / 4);
-      }
-    });
+
     result({
-      a: Ttotal + Btotal,
-      b: Ltotal + Rtotal,
+      a: calcScore(_firstCards) + calcScore(_thirdCards),
+      b: calcScore(_secondCards) + calcScore(_fourthCards),
     });
-    setFirstScore(Ttotal);
-    setSecondScore(Ltotal);
-    setThirdScore(Btotal);
-    setFourthScore(Rtotal);
-    await setFirstC([...first].sort((a, b) => (a.index > b.index ? 1 : -1)));
-    await setSecondC([...second].sort((a, b) => (a.index > b.index ? 1 : -1)));
-    await setThirdC([...third].sort((a, b) => (a.index > b.index ? 1 : -1)));
-    await setFourthC([...fourth].sort((a, b) => (a.index > b.index ? 1 : -1)));
+
+    setScore(() => {
+      return {
+        first: calcScore(_firstCards),
+        second: calcScore(_secondCards),
+        third: calcScore(_thirdCards),
+        fourth: calcScore(_fourthCards),
+      };
+    });
+
+    setCards(() => {
+      return {
+        first: cardSort(_firstCards),
+        second: cardSort(_secondCards),
+        third: cardSort(_thirdCards),
+        fourth: cardSort(_fourthCards),
+      };
+    });
+
     setTimeout(() => {
       setComplex(false);
       diving();
-    }, 3000);
+    }, 1000);
   };
 
   return (
@@ -125,15 +131,17 @@ export const Table = ({ result }: TableProps) => {
           <RoundButton type="redo" action={refresh} />
           <RoundButton action={startCard} className={classes.playBtn} />
         </div>
+
         {endStatus && (
           <>
-            {firstScore + thirdScore > secondScore + fourthScore ? (
+            {score.first + score.third > score.second + score.fourth ? (
               <img src={winner} className={classes.winnerA} alt="winner" />
             ) : (
               <img src={winner} className={classes.winnerB} alt="winner" />
             )}
           </>
         )}
+
         <div className={classes.avatar1Root}>
           <img src={avatar1} className={classes.avatar} alt="avatar1" />
           North
@@ -150,14 +158,16 @@ export const Table = ({ result }: TableProps) => {
           <img src={avatar4} className={classes.avatar} alt="avatar1" />
           West
         </div>
+
         {endStatus && (
           <>
-            <div className={classes.score1}>{firstScore}</div>
-            <div className={classes.score2}>{secondScore}</div>
-            <div className={classes.score3}>{thirdScore}</div>
-            <div className={classes.score4}>{fourthScore}</div>
+            <div className={classes.score1}>{score.first}</div>
+            <div className={classes.score2}>{score.second}</div>
+            <div className={classes.score3}>{score.third}</div>
+            <div className={classes.score4}>{score.fourth}</div>
           </>
         )}
+
         <>
           {complex && !status && !endStatus ? (
             <>
@@ -241,14 +251,15 @@ export const Table = ({ result }: TableProps) => {
             <></>
           )}
         </>
+
         {endStatus ? (
           <>
             <div className={classes.field1}>
-              {firstC?.map((item: any, key: any) => {
+              {cards.first?.map((item: Card, key: number) => {
                 return (
                   <img
                     key={key}
-                    src={item?.card}
+                    src={item?.cardImage}
                     className={classes.card}
                     alt="card"
                   ></img>
@@ -256,11 +267,11 @@ export const Table = ({ result }: TableProps) => {
               })}
             </div>
             <div className={classes.field2}>
-              {secondC?.map((item: any, key: any) => {
+              {cards.second?.map((item: Card, key: number) => {
                 return (
                   <img
                     key={key}
-                    src={item?.card}
+                    src={item?.cardImage}
                     className={classes.card}
                     alt="card"
                   ></img>
@@ -268,11 +279,11 @@ export const Table = ({ result }: TableProps) => {
               })}
             </div>
             <div className={classes.field3}>
-              {thirdC?.map((item: any, key: any) => {
+              {cards.third?.map((item: Card, key: number) => {
                 return (
                   <img
                     key={key}
-                    src={item?.card}
+                    src={item?.cardImage}
                     className={classes.card}
                     alt="card"
                   ></img>
@@ -280,11 +291,11 @@ export const Table = ({ result }: TableProps) => {
               })}
             </div>
             <div className={classes.field4}>
-              {fourthC?.map((item: any, key: any) => {
+              {cards.fourth?.map((item: Card, key: number) => {
                 return (
                   <img
                     key={key}
-                    src={item?.card}
+                    src={item?.cardImage}
                     className={classes.card}
                     alt="card"
                   ></img>

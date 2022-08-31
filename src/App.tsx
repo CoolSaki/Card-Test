@@ -1,6 +1,7 @@
 import "./App.css";
-import Layout from "layout/Layout";
 import { ThemeProvider, useTheme } from "@material-ui/core/styles";
+
+import Layout from "layout/Layout";
 
 function App() {
   const theme = useTheme();

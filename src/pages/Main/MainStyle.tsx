@@ -4,6 +4,7 @@ export const MainStyle = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
+      padding: "50px",
       [theme.breakpoints.down(1200)]: {
         flexDirection: "column",
       },
