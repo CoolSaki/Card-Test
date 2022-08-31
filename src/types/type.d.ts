@@ -3,3 +3,8 @@ declare interface Card {
   point: number;
   cardImage: string;
 }
+
+declare interface Score {
+  a: number;
+  b: number;
+}

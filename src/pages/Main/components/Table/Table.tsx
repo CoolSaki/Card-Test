@@ -11,7 +11,7 @@ import { useStyles } from "./TableStyle";
 import { Cards, Card_back, Card_div_time } from "config/constant";
 
 interface TableProps {
-  result: (e: any) => void;
+  result: (e: Score) => void;
 }
 
 export const Table = ({ result }: TableProps) => {

@@ -2,24 +2,19 @@ import { useState } from "react";
 import { Table } from "./components/Table/Table";
 import { MainStyle } from "./MainStyle";
 
-interface Score {
-  a: number;
-  b: number;
-}
-
 export const Main = () => {
   const classes = MainStyle();
-  const [AlltotalArray, setAlltotalArray] = useState<any>();
+  const [AlltotalArray, setAlltotalArray] = useState<Score[]>([]);
   const [AScore, setAScore] = useState(0);
   const [BScore, setBScore] = useState(0);
   const getResult = (e: Score) => {
     let instance: Score[] = [];
     instance = instance.concat(AlltotalArray, {
-      a: e?.a,
-      b: e?.b,
+      a: e.a,
+      b: e.b,
     });
-    setAScore(AScore + e?.a);
-    setBScore(BScore + e?.b);
+    setAScore(AScore + e.a);
+    setBScore(BScore + e.b);
     setAlltotalArray(instance);
   };
 
@@ -39,12 +34,10 @@ export const Main = () => {
           </div>
           {AlltotalArray?.map((item: Score, key: number) => {
             return (
-              item !== undefined && (
-                <div key={key} className={classes.column}>
-                  <div className={classes.item}>{item?.a}</div>
-                  <div className={classes.item}>{item?.b}</div>
-                </div>
-              )
+              <div key={key} className={classes.column}>
+                <div className={classes.item}>{item?.a}</div>
+                <div className={classes.item}>{item?.b}</div>
+              </div>
             );
           })}
           <div className={classes.column}>
